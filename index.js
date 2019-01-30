@@ -1,9 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const {
-    router
-} = require('./router/router');
 const app = express()
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -21,6 +18,25 @@ app.use(bodyParser.json())
 // cors use
 app.use(cors())
 
-app.use('/router', router)
 
-http.listen(1001, () => console.log(`listening on http://localhost: 5050`));
+io.on('connection', (socket) => {
+    console.log("usuario conectado");
+});
+
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
+const {
+    router
+} = require('./router/router');
+
+app.use('router/', router);
+
+// app.get('/:id', (req, res) => {
+//     res.send(req.query)
+    
+// })
+
+http.listen(1001, () => console.log(`listening on http://localhost:1001`));
