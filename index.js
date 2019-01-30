@@ -23,20 +23,15 @@ io.on('connection', (socket) => {
     console.log("usuario conectado");
 });
 
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
 
 const {
     router
 } = require('./router/router');
 
-app.use('router/', router);
-
-// app.get('/:id', (req, res) => {
-//     res.send(req.query)
-    
-// })
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+app.use('/router', router);
 
 http.listen(1001, () => console.log(`listening on http://localhost:1001`));
